@@ -9,12 +9,14 @@ const glbalError = require('./middleware/globalError');
 
 const PORT = process.env.PORT || 3000;
 
+// Connect with database
 connectDB();
 
 const app = express();
 
 app.use(express.json());
 
+// Middleware to logger
 if(process.env.NODE_ENV === 'development'){
     app.use(morgan('dev'))
     console.log(`mode ${process.env.NODE_ENV}`);
@@ -28,14 +30,24 @@ app.use((req , res , next) => {
 // Global error handeling middleware
 app.use(glbalError);
 
+// check connect with database successfully
 mongoose.connection.once('open' , () => {
     console.log('connect with database successfully');
 });
 
-app.listen(PORT , () => {
+const server = app.listen(PORT , () => {
     console.log(`Server is runing on port ${PORT}`)
 });
 
 mongoose.connection.on('error' , (err) => {
     console.log(err);
+});
+
+// Handled rejection error outside express
+process.on('unhandledRejection' , (err) => {
+    console.log(`unhandledRejection ${err.name} | ${err.message}`);
+    server.close(() => {
+        console.log('Shutting down.....');
+        process.exit(1);
+    });
 });
