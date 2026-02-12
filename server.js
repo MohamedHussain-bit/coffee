@@ -5,6 +5,7 @@ const morgan = require('morgan');
 
 const connectDB = require('./config/connectDB');
 const ApiError = require('./utils/apiError');
+const glbalError = require('./middleware/globalError');
 
 const PORT = process.env.PORT || 3000;
 
@@ -25,9 +26,7 @@ app.use((req , res , next) => {
 });
 
 // Global error handeling middleware
-app.use((err , req , res , next) => {
-    res.status(500).json({err});
-});
+app.use(glbalError);
 
 mongoose.connection.once('open' , () => {
     console.log('connect with database successfully');
