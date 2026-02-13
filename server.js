@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const connectDB = require('./config/connectDB');
 const ApiError = require('./utils/apiError');
 const glbalError = require('./middleware/globalError');
+const categoryRoutes = require('./routes/categoryRoutes');
 
 const PORT = process.env.PORT || 3000;
 
@@ -21,6 +22,9 @@ if(process.env.NODE_ENV === 'development'){
     app.use(morgan('dev'))
     console.log(`mode ${process.env.NODE_ENV}`);
 };
+
+// mount routes
+app.use('/api/v1/categories' , categoryRoutes);
 
 // If not found routes
 app.use((req , res , next) => {
