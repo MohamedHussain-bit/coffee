@@ -11,9 +11,9 @@ exports.createCategoryValidator = [
         .withMessage('too short category name')
         .isLength({max : 20})
         .withMessage('too long category name')
-        .trim()
-        .custom((name , {req}) => {
-            req.body.slug = slugify(name);
+        .custom((value , {req}) => {
+            req.body.slug = slugify(value , {lower : true});
+            console.log(req.body)
             return true;
         }),
     validatorMiddleware
