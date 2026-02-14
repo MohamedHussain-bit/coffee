@@ -18,3 +18,10 @@ exports.createCategoryValidator = [
         }),
     validatorMiddleware
 ];
+
+exports.getSpecificCategoryValidator = [
+    check('id')
+        .isMongoId()
+        .withMessage('Invalide Id'),
+    validatorMiddleware
+];
