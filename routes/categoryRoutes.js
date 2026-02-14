@@ -4,10 +4,14 @@ const {
     createCategory,
 } = require('../services/categoryServices');
 
+const {
+    createCategoryValidator,
+} = require('../utils/validatorRoles/categoryValidator');
+
 const router = express.Router();
 
 router.route('/')
-    .post(createCategory)
+    .post(createCategoryValidator ,createCategory)
 
 
 module.exports = router;
