@@ -8,6 +8,7 @@ const {
 
 const {
     createCategoryValidator,
+    getSpecificCategoryValidator,
 } = require('../utils/validatorRoles/categoryValidator');
 
 const router = express.Router();
@@ -17,6 +18,6 @@ router.route('/')
     .get(getAllCategories)
 
 router.route('/:id')
-    .get(getSpecificCategory)
+    .get(getSpecificCategoryValidator , getSpecificCategory)
 
 module.exports = router;
