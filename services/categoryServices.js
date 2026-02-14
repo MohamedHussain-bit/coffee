@@ -33,3 +33,17 @@ exports.getAllCategories = asyncHandler(async (req , res , next) => {
         data :categories,
     });
 });
+
+// @desc     Get all category
+// @route    GET api/v1/categories
+// @access   Public
+exports.getSpecificCategory = asyncHandler(async (req , res , next) => {
+    const {id} = req.params;
+    const category = await Caregory.findById(id);
+    if(!category){
+        return next(new ApiError(`category for this id ${id} not found` , 404));
+    };
+    return res.status(200).json({
+        data : category
+    });
+});
