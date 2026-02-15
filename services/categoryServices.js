@@ -72,5 +72,5 @@ exports.deleteCategory = asyncHandler(async (req , res , next) => {
     if(!category){
         return next(new ApiError(`category for this id not found` , 404));
     };
-    return res.status(204).json({message : `deleted successfully`});
+    return res.status(204).send();
 });
