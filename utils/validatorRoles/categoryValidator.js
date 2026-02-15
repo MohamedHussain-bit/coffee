@@ -37,3 +37,10 @@ exports.updateCategoryValidator = [
         }),
     validatorMiddleware
 ];
+
+exports.deleteCategoryValidator = [
+    check('id')
+        .isMongoId()
+        .withMessage('Invalide Id'),
+    validatorMiddleware
+];
