@@ -25,3 +25,15 @@ exports.getSpecificCategoryValidator = [
         .withMessage('Invalide Id'),
     validatorMiddleware
 ];
+
+exports.updateCategoryValidator = [
+    check('id')
+        .isMongoId()
+        .withMessage('Invalide Id'),
+    check('name')
+        .optional()
+        .custom((value , {req}) => {
+            req.body.slug = slugify(value);
+        }),
+    validatorMiddleware
+];
