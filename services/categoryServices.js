@@ -53,7 +53,8 @@ exports.getSpecificCategory = asyncHandler(async (req , res , next) => {
 // @access   protected
 exports.updateCategory = asyncHandler(async (req , res , next) => {
     const {id} = req.params;
-    const category = await Caregory.findByIdAndUpdate(id);
+    
+    const category = await Caregory.findByIdAndUpdate({_id : id} , req.body , {new : true});
     if(!category){
         return next(new ApiError(`category for this id ${id} not found` , 404));
     };

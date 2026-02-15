@@ -13,7 +13,6 @@ exports.createCategoryValidator = [
         .withMessage('too long category name')
         .custom((value , {req}) => {
             req.body.slug = slugify(value , {lower : true});
-            console.log(req.body)
             return true;
         }),
     validatorMiddleware
@@ -34,6 +33,7 @@ exports.updateCategoryValidator = [
         .optional()
         .custom((value , {req}) => {
             req.body.slug = slugify(value);
+            return true;
         }),
     validatorMiddleware
 ];
