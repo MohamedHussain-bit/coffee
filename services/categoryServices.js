@@ -35,11 +35,25 @@ exports.getAllCategories = asyncHandler(async (req , res , next) => {
 });
 
 // @desc     Get specific category
-// @route    GET api/v1/categories
+// @route    GET api/v1/categories/:id
 // @access   Public
 exports.getSpecificCategory = asyncHandler(async (req , res , next) => {
     const {id} = req.params;
     const category = await Caregory.findById(id);
+    if(!category){
+        return next(new ApiError(`category for this id ${id} not found` , 404));
+    };
+    return res.status(200).json({
+        data : category
+    });
+});
+
+// @desc     Update category
+// @route    PUT api/v1/categories/:id
+// @access   Public
+exports.updateCategory = asyncHandler(async (req , res , next) => {
+    const {id} = req.params;
+    const category = await Caregory.findByIdAndUpdate(id);
     if(!category){
         return next(new ApiError(`category for this id ${id} not found` , 404));
     };
