@@ -50,7 +50,7 @@ exports.getSpecificCategory = asyncHandler(async (req , res , next) => {
 
 // @desc     Update category
 // @route    PUT api/v1/categories/:id
-// @access   Public
+// @access   protected
 exports.updateCategory = asyncHandler(async (req , res , next) => {
     const {id} = req.params;
     const category = await Caregory.findByIdAndUpdate(id);
@@ -60,4 +60,16 @@ exports.updateCategory = asyncHandler(async (req , res , next) => {
     return res.status(200).json({
         data : category
     });
+});
+
+// @desc     delete category
+// @route    DELETE api/v1/categories/:id
+// @access   protected
+exports.deleteCategory = asyncHandler(async (req , res , next) => {
+    const {id} = req.params;
+    const category = await Caregory.findByIdAndDelete(id);
+    if(!category){
+        return next(new ApiError(`category for this id not found` , 404));
+    };
+    return res.status(204).json({message : `deleted successfully`});
 });
