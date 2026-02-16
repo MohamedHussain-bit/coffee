@@ -15,6 +15,7 @@ exports.createProductValidator = [
         .withMessage('too long product title')
         .custom((value , {req}) => {
             req.body.slug = slugify(value);
+            return true;
         }),
     check('description')
         .notEmpty()
@@ -40,7 +41,7 @@ exports.createProductValidator = [
         .optional()
         .isNumeric()
         .withMessage('product price after discount must be number')
-        .custom((value) => {
+        .custom((value , {req}) => {
             if(req.body.price <= value){
                 throw new Error('price after discount must be lower than price');
             };
