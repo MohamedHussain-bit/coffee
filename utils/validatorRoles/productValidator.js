@@ -83,3 +83,10 @@ exports.createProductValidator = [
         .withMessage('ratings quantity must be number'),
     validatorMiddleware
 ];
+
+exports.getSpecificProductValidator = [
+    check('id')
+        .isMongoId()
+        .withMessage('invalide id'),
+    validatorMiddleware
+];
