@@ -102,3 +102,10 @@ exports.updateProductValidator = [
         }),
     validatorMiddleware
 ];
+
+exports.deleteProductValidator = [
+    check('id')
+        .isMongoId()
+        .withMessage('invalide id'),
+    validatorMiddleware
+];
