@@ -7,6 +7,7 @@ const connectDB = require('./config/connectDB');
 const ApiError = require('./utils/apiError');
 const glbalError = require('./middleware/globalError');
 const categoryRoutes = require('./routes/categoryRoutes');
+const productRoutes = require('./routes/productRoutes');
 
 const PORT = process.env.PORT || 3000;
 
@@ -25,6 +26,7 @@ if(process.env.NODE_ENV === 'development'){
 
 // mount routes
 app.use('/api/v1/categories' , categoryRoutes);
+app.use('/api/v1/products' , productRoutes);
 
 // If not found routes
 app.use((req , res , next) => {
