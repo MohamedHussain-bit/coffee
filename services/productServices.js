@@ -34,13 +34,28 @@ exports.getAllProducts = asyncHandler(async (req , res , next) => {
     });
 });
 
-// @desc     Get specific products
+// @desc     Get specific product
 // @route    GET api/v1/products/:id
 // @access   public
 exports.getSpecificProduct = asyncHandler(async (req , res , next) => {
     const {id} = req.params;
 
     const product = await Product.findById(id);
+
+    if(!product){
+        return next(new ApiErorr(`product for this id ${id} not found` , 404));
+    };
+
+    return res.status(200).json({data : product});
+});
+
+// @desc     update product
+// @route    PUT api/v1/products/:id
+// @access   protected
+exports.updateProduct = asyncHandler(async (req , res , next) => {
+    const {id} = req.params;
+
+    const product = await Product.findByIdAndUpdate({_id : id} , req.body , {new : true});
 
     if(!product){
         return next(new ApiErorr(`product for this id ${id} not found` , 404));
