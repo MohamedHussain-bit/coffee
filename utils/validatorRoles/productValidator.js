@@ -90,3 +90,15 @@ exports.getSpecificProductValidator = [
         .withMessage('invalide id'),
     validatorMiddleware
 ];
+
+exports.updateProductValidator = [
+    check('id')
+        .isMongoId()
+        .withMessage('invalide id'),
+    check('title')
+        .optional()
+        .custom((value , {req}) => {
+            req.body.slug = slugify(value);
+        }),
+    validatorMiddleware
+];
