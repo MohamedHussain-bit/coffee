@@ -100,6 +100,7 @@ exports.updateProductValidator = [
         .optional()
         .custom((value , {req}) => {
             req.body.slug = slugify(value);
+            return true;
         }),
     validatorMiddleware
 ];
