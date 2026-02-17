@@ -15,7 +15,12 @@ const {
     deleteCategoryValidator,
 } = require('../utils/validatorRoles/categoryValidator');
 
+const productRoutes = require('./productRoutes');
+
 const router = express.Router();
+
+// Nested route 
+router.use('/:categoryId/products' , productRoutes);
 
 router.route('/')
     .post(createCategoryValidator ,createCategory)

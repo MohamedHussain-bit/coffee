@@ -3,6 +3,15 @@ const asyncHandler = require('express-async-handler');
 const Product = require('../models/productSchema');
 const ApiErorr = require('../utils/apiError');
 
+// Creat filter object
+exports.createFilterObject = asyncHandler(async (req , res , next) => {
+    let filterObject = {};
+    if(req.params.categoryId){
+        return filterObject = {category : req.params.categoryId};
+    };
+    req.filterObject = filterObject;
+});
+
 // @desc     Careate product
 // @route    POST api/v1/products
 // @access   protected
@@ -21,7 +30,7 @@ exports.getAllProducts = asyncHandler(async (req , res , next) => {
     const limit = Number(req.query.limit) || 5;
     const skip = (page - 1) * limit;
 
-    const products = await Product.find({}).skip(skip).limit(limit);
+    const products = await Product.find(filterObject).skip(skip).limit(limit);
 
     if(!products){
         return next(new ApiErorr('Products not found' , 404));

@@ -6,6 +6,7 @@ const {
     getSpecificProduct,
     updateProduct,
     deleteProduct,
+    createFilterObject,
 } = require('../services/productServices');
 
 const {
@@ -15,11 +16,11 @@ const {
     deleteProductValidator,
 } = require('../utils/validatorRoles/productValidator');
 
-const router = express.Router();
+const router = express.Router({mergeParams : true});
 
 router.route('/')
     .post(createProductValidator , createProduct)
-    .get(getAllProducts)
+    .get(createFilterObject , getAllProducts)
 
 router.route('/:id')
     .get(getSpecificProductValidator , getSpecificProduct)
