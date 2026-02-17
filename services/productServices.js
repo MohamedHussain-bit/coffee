@@ -3,7 +3,14 @@ const asyncHandler = require('express-async-handler');
 const Product = require('../models/productSchema');
 const ApiErorr = require('../utils/apiError');
 
-// Creat filter object
+// Set categoryId to body to create product debend on category
+// Nested route
+exports.setCategoryIdToBody = asyncHandler(async (req , res , next) => {
+    if(!req.body.category) req.body.category = req.params.categoryId;
+    next();
+});
+
+// Creat filter object to get product on category
 exports.createFilterObject = asyncHandler(async (req , res , next) => {
     let filterObject = {};
     if(req.params.categoryId)
