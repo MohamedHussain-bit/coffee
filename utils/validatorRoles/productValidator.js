@@ -53,8 +53,12 @@ exports.createProductValidator = [
         .isLength({max : 10})
         .withMessage('too long product size'),
     check('imageCover')
-        .notEmpty()
-        .withMessage('product image cover required'),
+        .custom((value , {req}) => {
+            if(!req.file){
+                throw new Error('product image cover required');
+            }
+            return true;
+        }),
     check('images')
         .optional()
         .toArray(),

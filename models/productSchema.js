@@ -39,7 +39,6 @@ const productSchema = new mongoose.Schema({
     },
     imageCover : {
         type : String,
-        required : true,
     },
     images : [String],
     category : {
