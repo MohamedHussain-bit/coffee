@@ -23,7 +23,7 @@ const filter = (req , file , cb) => {
     if(file.mimetype.startsWith('image')){
         cb(null , true);
     } else {
-        cb(new ApiErorr('only image allowed' , 400));
+        cb(new ApiErorr('only image allowed' , 400) , false);
     };
 };
 
