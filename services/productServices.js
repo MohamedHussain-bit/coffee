@@ -1,23 +1,28 @@
 const asyncHandler = require('express-async-handler');
 const multer = require('multer');
 const {v4 : uuid} = require('uuid');
+const sharp = require('sharp');
 
 const Product = require('../models/productSchema');
 const ApiErorr = require('../utils/apiError');
 
-const storage = multer.diskStorage({
-    destination : function(req , file , cb){
-        cb(null , 'uploads/products');
-    },
-    filename : function(req , file , cb){
-        // Ecstract extention image
-        const ext = file.mimetype.split('/')[1];
-        // Create defrent name  product-${uuid}-${Date.now()}.jpeg
-        const filename = `products-${uuid()}-${Date.now()}.${ext}`;
+// Discstorage engine
+// const storage = multer.diskStorage({
+//     destination : function(req , file , cb){
+//         cb(null , 'uploads/products');
+//     },
+//     filename : function(req , file , cb){
+//         // Ecstract extention image
+//         const ext = file.mimetype.split('/')[1];
+//         // Create defrent name  product-${uuid}-${Date.now()}.jpeg
+//         const filename = `products-${uuid()}-${Date.now()}.${ext}`;
         
-        cb(null , filename);
-    }
-});
+//         cb(null , filename);
+//     }
+// });
+
+// Momery storige engine
+const storage = multer.memoryStorage();
 
 const filter = (req , file , cb) => {
     if(file.mimetype.startsWith('image')){
@@ -30,6 +35,20 @@ const filter = (req , file , cb) => {
 const upload = multer({storage : storage , fileFilter : filter});
 
 exports.uploadProductImage = upload.single('imageCover');
+
+// Resize images
+exports.resizeImage = asyncHandler(async (req , res , next) => {
+    const filename = `products-${uuid()}-${Date.now()}.jpeg`;
+    console.log(req.file)
+    await sharp(req.file.buffer)
+    .resize(600 , 600)
+    .toFormat('jpeg')
+    .jpeg({quality : 60})
+    .toFile(`uploads/products/${filename}`);
+    // To save mage on database
+    req.body.imageCover = filename;
+    next();
+});
 
 // Set categoryId to body to create product debend on category
 // Nested route

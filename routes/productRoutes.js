@@ -9,6 +9,7 @@ const {
     createFilterObject,
     setCategoryIdToBody,
     uploadProductImage,
+    resizeImage,
 } = require('../services/productServices');
 
 const {
@@ -21,7 +22,7 @@ const {
 const router = express.Router({mergeParams : true});
 
 router.route('/')
-    .post(uploadProductImage , setCategoryIdToBody , createProductValidator , createProduct)
+    .post(uploadProductImage , resizeImage ,  setCategoryIdToBody , createProductValidator , createProduct)
     .get(createFilterObject , getAllProducts)
 
 router.route('/:id')
