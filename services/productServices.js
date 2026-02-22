@@ -39,7 +39,6 @@ exports.uploadProductImage = upload.single('imageCover');
 // Resize images
 exports.resizeImage = asyncHandler(async (req , res , next) => {
     const filename = `products-${uuid()}-${Date.now()}.jpeg`;
-    console.log(req.file)
     await sharp(req.file.buffer)
     .resize(600 , 600)
     .toFormat('jpeg')

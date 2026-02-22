@@ -1,8 +1,10 @@
-require('dotenv').config();
+const path = require('path');
+
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 
+require('dotenv').config();
 const connectDB = require('./config/connectDB');
 const ApiError = require('./utils/apiError');
 const glbalError = require('./middleware/globalError');
@@ -17,6 +19,8 @@ connectDB();
 const app = express();
 
 app.use(express.json());
+
+app.use(express.static(path.join(__dirname , 'uploads')));
 
 // Middleware to logger
 if(process.env.NODE_ENV === 'development'){
