@@ -27,7 +27,7 @@ router.route('/')
 
 router.route('/:id')
     .get(getSpecificProductValidator , getSpecificProduct)
-    .put(updateProductValidator , updateProduct)
+    .put(uploadProductImage , resizeImage , updateProductValidator , updateProduct)
     .delete(deleteProductValidator , deleteProduct)
 
 module.exports = router;
