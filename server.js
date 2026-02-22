@@ -20,6 +20,7 @@ const app = express();
 
 app.use(express.json());
 
+// serve static file into uploads folder
 app.use(express.static(path.join(__dirname , 'uploads')));
 
 // Middleware to logger
