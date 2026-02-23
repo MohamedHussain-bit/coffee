@@ -5,36 +5,10 @@ const sharp = require('sharp');
 
 const Product = require('../models/productSchema');
 const ApiErorr = require('../utils/apiError');
+const { uploadSingleImage } = require('../middleware/uploadImageMiddlewar');
 
-// Discstorage engine
-// const storage = multer.diskStorage({
-//     destination : function(req , file , cb){
-//         cb(null , 'uploads/products');
-//     },
-//     filename : function(req , file , cb){
-//         // Ecstract extention image
-//         const ext = file.mimetype.split('/')[1];
-//         // Create defrent name  product-${uuid}-${Date.now()}.jpeg
-//         const filename = `products-${uuid()}-${Date.now()}.${ext}`;
-        
-//         cb(null , filename);
-//     }
-// });
-
-// Momery storige engine
-const storage = multer.memoryStorage();
-
-const filter = (req , file , cb) => {
-    if(file.mimetype.startsWith('image')){
-        cb(null , true);
-    } else {
-        cb(new ApiErorr('only image allowed' , 400) , false);
-    };
-};
-
-const upload = multer({storage : storage , fileFilter : filter});
-
-exports.uploadProductImage = upload.single('imageCover');
+// Upload single image
+exports.uploadProductImage = uploadSingleImage('imageCover');
 
 // Resize images
 exports.resizeImage = asyncHandler(async (req , res , next) => {
