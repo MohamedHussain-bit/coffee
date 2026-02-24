@@ -1,11 +1,11 @@
 const asyncHandler = require('express-async-handler');
-const multer = require('multer');
 const {v4 : uuid} = require('uuid');
 const sharp = require('sharp');
 
 const Product = require('../models/productSchema');
 const ApiErorr = require('../utils/apiError');
 const { uploadSingleImage } = require('../middleware/uploadImageMiddlewar');
+const handlerFactory = require('./handlerFactory');
 
 // Upload single image
 exports.uploadProductImage = uploadSingleImage('imageCover');
@@ -30,7 +30,7 @@ exports.setCategoryIdToBody = asyncHandler(async (req , res , next) => {
     next();
 });
 
-// Creat filter object to get product on category
+// Create filter object to get product on category
 exports.createFilterObject = asyncHandler(async (req , res , next) => {
     let filterObject = {};
     if(req.params.categoryId)
@@ -43,12 +43,7 @@ exports.createFilterObject = asyncHandler(async (req , res , next) => {
 // @desc     Careate product
 // @route    POST api/v1/products
 // @access   protected
-exports.createProduct = asyncHandler(async (req , res , next) => {
-    const product = await Product.create(req.body);
-    return res.status(201).json({
-        data : product
-    });
-});
+exports.createProduct = handlerFactory.createOne(Product);
 
 // @desc     Get products
 // @route    GET api/v1/products
@@ -74,44 +69,14 @@ exports.getAllProducts = asyncHandler(async (req , res , next) => {
 // @desc     Get specific product
 // @route    GET api/v1/products/:id
 // @access   public
-exports.getSpecificProduct = asyncHandler(async (req , res , next) => {
-    const {id} = req.params;
-
-    const product = await Product.findById(id);
-
-    if(!product){
-        return next(new ApiErorr(`product for this id ${id} not found` , 404));
-    };
-
-    return res.status(200).json({data : product});
-});
+exports.getSpecificProduct = handlerFactory.getOne(Product);
 
 // @desc     update product
 // @route    PUT api/v1/products/:id
 // @access   protected
-exports.updateProduct = asyncHandler(async (req , res , next) => {
-    const {id} = req.params;
-
-    const product = await Product.findByIdAndUpdate({_id : id} , req.body , {new : true});
-
-    if(!product){
-        return next(new ApiErorr(`product for this id ${id} not found` , 404));
-    };
-
-    return res.status(200).json({data : product});
-});
+exports.updateProduct = handlerFactory.updateOne(Product);
 
 // @desc     delete product
 // @route    DELETE api/v1/products/:id
 // @access   protected
-exports.deleteProduct = asyncHandler(async (req , res , next) => {
-    const {id} = req.params;
-
-    const product = await Product.findByIdAndDelete(id);
-
-    if(!product){
-        return next(new ApiErorr(`product for this id ${id} not found` , 404));
-    };
-
-    return res.status(204).send();
-});
+exports.deleteProduct = handlerFactory.deleteOne(Product);

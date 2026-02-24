@@ -2,15 +2,12 @@ const asyncHandler = require('express-async-handler');
 
 const ApiError = require('../utils/apiError');
 const Caregory = require('../models/categorySchema');
+const handlerFactory = require('./handlerFactory');
 
 // @desc     Create category
 // @route    POST api/v1/categories
 // @access   Public
-exports.createCategory = asyncHandler(async (req , res , next) => {
-    const {name , slug} = req.body;
-    const category = await Caregory.create({name , slug});
-    return res.status(201).json({data : category});
-});
+exports.createCategory = handlerFactory.createOne(Caregory);
 
 // @desc     Get all category
 // @route    GET api/v1/categories
@@ -37,40 +34,14 @@ exports.getAllCategories = asyncHandler(async (req , res , next) => {
 // @desc     Get specific category
 // @route    GET api/v1/categories/:id
 // @access   Public
-exports.getSpecificCategory = asyncHandler(async (req , res , next) => {
-    const {id} = req.params;
-    const category = await Caregory.findById(id);
-    if(!category){
-        return next(new ApiError(`category for this id ${id} not found` , 404));
-    };
-    return res.status(200).json({
-        data : category
-    });
-});
+exports.getSpecificCategory = handlerFactory.getOne(Caregory);
 
 // @desc     Update category
 // @route    PUT api/v1/categories/:id
 // @access   protected
-exports.updateCategory = asyncHandler(async (req , res , next) => {
-    const {id} = req.params;
-    
-    const category = await Caregory.findByIdAndUpdate({_id : id} , req.body , {new : true});
-    if(!category){
-        return next(new ApiError(`category for this id ${id} not found` , 404));
-    };
-    return res.status(200).json({
-        data : category
-    });
-});
+exports.updateCategory = handlerFactory.updateOne(Caregory);
 
 // @desc     delete category
 // @route    DELETE api/v1/categories/:id
 // @access   protected
-exports.deleteCategory = asyncHandler(async (req , res , next) => {
-    const {id} = req.params;
-    const category = await Caregory.findByIdAndDelete(id);
-    if(!category){
-        return next(new ApiError(`category for this id not found` , 404));
-    };
-    return res.status(204).send();
-});
+exports.deleteCategory = handlerFactory.deleteOne(Caregory);
