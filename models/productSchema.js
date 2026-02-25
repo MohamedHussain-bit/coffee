@@ -57,4 +57,9 @@ const productSchema = new mongoose.Schema({
     }
 } , {timestamps : true});
 
+// Populate category name
+productSchema.pre(/^find/ , function(next){
+    this.populate({path : 'category' , select : 'name -_id'});
+});
+
 module.exports = mongoose.model('Product' , productSchema);
