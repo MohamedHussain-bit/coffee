@@ -63,18 +63,19 @@ productSchema.pre(/^find/ , function(next){
 });
 
 // Return image url in responce
-productSchema.post('init' , (document) => {
+const setImageURL = (document) => {
     if(document.imageCover){
         const imageCoverURL = `${process.env.BASE_URL}/products/${document.imageCover}`;
         document.imageCover = imageCoverURL;
     };
+};
+
+productSchema.post('init' , (document) => {
+    setImageURL(document);
 });
 
 productSchema.post('save' , (document) => {
-    if(document.imageCover){
-        const imageCoverURL = `${process.env.BASE_URL}/products/${document.imageCover}`;
-        document.imageCover = imageCoverURL;
-    };
+    setImageURL(document);
 });
 
 
