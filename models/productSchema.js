@@ -62,4 +62,20 @@ productSchema.pre(/^find/ , function(next){
     this.populate({path : 'category' , select : 'name -_id'});
 });
 
+// Return image url in responce
+productSchema.post('init' , (document) => {
+    if(document.imageCover){
+        const imageCoverURL = `${process.env.BASE_URL}/products/${document.imageCover}`;
+        document.imageCover = imageCoverURL;
+    };
+});
+
+productSchema.post('save' , (document) => {
+    if(document.imageCover){
+        const imageCoverURL = `${process.env.BASE_URL}/products/${document.imageCover}`;
+        document.imageCover = imageCoverURL;
+    };
+});
+
+
 module.exports = mongoose.model('Product' , productSchema);
