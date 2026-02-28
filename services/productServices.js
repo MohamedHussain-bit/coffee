@@ -1,26 +1,45 @@
 const asyncHandler = require('express-async-handler');
 const {v4 : uuid} = require('uuid');
 const sharp = require('sharp');
+const multer = require('multer');
 
 const Product = require('../models/productSchema');
 const ApiErorr = require('../utils/apiError');
 const { uploadSingleImage } = require('../middleware/uploadImageMiddlewar');
 const handlerFactory = require('./handlerFactory');
 
+const storage = multer.memoryStorage();
+
+const filter = (req , file , cb) => {
+    if(file.mimetype.startsWith('image')){
+        cb(null , true);
+    } else {
+        cb(new ApiErorr(`only images allowed` , 400) , false);
+    };
+};
+
+const upload = multer({storage : storage , fileFilter : filter });
+
 // Upload single image
-exports.uploadProductImage = uploadSingleImage('imageCover');
+// exports.uploadProductImage = uploadSingleImage('imageCover');
+exports.uploadProductImage = upload.fields([
+    {name : 'imageCover' , maxCount : 1},
+    {name : 'images' , maxCount : 5}
+]);
 
 // Resize images
 exports.resizeImage = asyncHandler(async (req , res , next) => {
-    const filename = `products-${uuid()}-${Date.now()}.jpeg`;
-    await sharp(req.file.buffer)
-    .resize(600 , 600)
-    .toFormat('jpeg')
-    .jpeg({quality : 60})
-    .toFile(`uploads/products/${filename}`);
-    // To save mage on database
-    req.body.imageCover = filename;
-    next();
+    console.log(req.files)
+    if(req.files.imageCove){
+        const filename = `products-${uuid()}-${Date.now()}.jpeg`;
+        await sharp(req.files.imageCove[0].buffer)
+        .resize(600 , 600)
+        .toFormat('jpeg')
+        .jpeg({quality : 60})
+        .toFile(`uploads/products/${filename}`);
+        // To save mage on database
+        req.body.imageCover = filename;
+    }
 });
 
 // Set categoryId to body to create product debend on category
