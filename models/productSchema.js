@@ -68,6 +68,14 @@ const setImageURL = (document) => {
         const imageCoverURL = `${process.env.BASE_URL}/products/${document.imageCover}`;
         document.imageCover = imageCoverURL;
     };
+    if(document.images){
+        const imagesList = [];
+        document.images.array.forEach((image)=> {
+            const imageUrl = `${process.env.BASE_URL}/products/${image}`;
+            images.push(imageUrl);
+        });
+        document.images = imagesList;
+    };
 };
 
 productSchema.post('init' , (document) => {

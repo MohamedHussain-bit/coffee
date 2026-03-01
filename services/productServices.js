@@ -5,24 +5,13 @@ const multer = require('multer');
 
 const Product = require('../models/productSchema');
 const ApiErorr = require('../utils/apiError');
-const { uploadSingleImage } = require('../middleware/uploadImageMiddlewar');
+const { uploadMixOfImages } = require('../middleware/uploadImageMiddlewar');
 const handlerFactory = require('./handlerFactory');
 
-const storage = multer.memoryStorage();
-
-const filter = (req , file , cb) => {
-    if(file.mimetype.startsWith('image')){
-        cb(null , true);
-    } else {
-        cb(new ApiErorr(`only images allowed` , 400) , false);
-    };
-};
-
-const upload = multer({storage : storage , fileFilter : filter });
 
 // Upload single image
 // exports.uploadProductImage = uploadSingleImage('imageCover');
-exports.uploadProductImage = upload.fields([
+exports.uploadProductImage = uploadMixOfImages([
     {name : 'imageCover' , maxCount : 1},
     {name : 'images' , maxCount : 5}
 ]);
@@ -30,8 +19,9 @@ exports.uploadProductImage = upload.fields([
 // Resize images
 exports.resizeImage = asyncHandler(async (req , res , next) => {
     console.log(req.files)
+    // Image proccesing for imageCover
     if(req.files.imageCove){
-        const filename = `products-${uuid()}-${Date.now()}.jpeg`;
+        const filename = `products-${uuid()}-${Date.now()}-cover.jpeg`;
         await sharp(req.files.imageCove[0].buffer)
         .resize(600 , 600)
         .toFormat('jpeg')
@@ -39,7 +29,23 @@ exports.resizeImage = asyncHandler(async (req , res , next) => {
         .toFile(`uploads/products/${filename}`);
         // To save mage on database
         req.body.imageCover = filename;
-    }
+    };
+    // Image proccessing for images
+    if(req.files.images){
+        req.body.images = [];
+            // loop on images
+        await Promise.all( req.files.images.map(async (image) => {
+                const imageName = `products-${uuid()}-${Date.now()}.jpeg`;
+                await sharp(image.buffer)
+                .resize(600 , 600)
+                .toFormat('jpeg')
+                .jpeg({quality : 60})
+                .toFile(`uploads/products/${filename}`);
+                // To save mage on database
+                req.body.images.push(imageName);
+        }));
+    };
+    next();
 });
 
 // Set categoryId to body to create product debend on category
