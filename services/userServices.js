@@ -71,7 +71,7 @@ exports.updateUser = asyncHandler(async (req , res , next) => {
 });
 
 // @desc     Change user password
-// @route    PUT /api/v1/changePassword/:id
+// @route    PUT /api/v1/users/changePassword/:id
 // @access   Private
 exports.changePassword = asyncHandler(async (req , res , next) => {
     const user = await User.findByIdAndUpdate(
