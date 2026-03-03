@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const {v4 : uuid} = require('uuid');
 const sharp = require('sharp');
+const bcrypt = require('bcrypt');
 
 const ApiError = require('../utils/apiError');
 const User = require('../models/userSchema');
@@ -50,6 +51,26 @@ exports.updateUser = asyncHandler(async (req , res , next) => {
     );
     if(!user){
         next(new ApiError(`user for this id ${id} not found` , 404));
+    };
+    return res.status(200).json({data : user});
+});
+
+// @desc     Change user password
+// @route    PUT /api/v1/changePassword/:id
+// @access   Private
+exports.changePassword = asyncHandler(async (req , res , next) => {
+    const user = await User.findByIdAndUpdate(
+        req.params.id,
+        {
+            password : await bcrypt.hash(req.body.password , 10),
+            passwordChangedAt : Date.now()
+        },
+        {
+            new : true
+        }
+    );
+    if(!user){
+        next(new ApiError(`not found password for this user` , 404));
     };
     return res.status(200).json({data : user});
 });
