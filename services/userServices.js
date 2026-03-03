@@ -1,8 +1,15 @@
 const asyncHandler = require('express-async-handler');
+const {v4 : uuid} = require('uuid');
+const sharp = require('sharp');
 
 const ApiError = require('../utils/apiError');
 const User = require('../models/userSchema');
 const handlerFactory = require('./handlerFactory');
+const {uploadSingleImage} = require('../middleware/uploadImageMiddlewar');
+
+
+// Upload profileImage
+exports.uploadUserImage = uploadSingleImage('profileImage')
 
 
 // @desc     Create user
