@@ -57,3 +57,10 @@ exports.careateUserValidator = [
         .optional(),
     validatorMiddleware
 ];
+
+exports.getUserValidator = [
+    check('id')
+        .isMongoId()
+        .withMessage('Invalide id'),
+    validatorMiddleware
+];
