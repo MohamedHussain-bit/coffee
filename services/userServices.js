@@ -47,7 +47,7 @@ exports.deleteUser = handlerFactory.deleteOne(User);
 // @route    PUT /api/v1/users/:id
 // @access   Private
 exports.updateUser = asyncHandler(async (req , res , next) => {
-    const id = req.params;
+    const {id} = req.params;
     const {name, slug, email, phone, profileImage, role, active} = req.body;
     const user = await User.findByIdAndUpdate(
         id,
