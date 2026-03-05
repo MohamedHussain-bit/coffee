@@ -12,9 +12,9 @@ const {
 const router = express.Router();
 
 // Change user password
-router.route('changePasswored/:id')
+router.route('/changePasswored/:id')
     .put(changePassword)
-    
+
 router.route('/')
     .post(createUser)
     .get(getAllUser)
