@@ -136,3 +136,10 @@ exports.chengeUserPasswordValidator = [
         }),
     validatorMiddleware
 ];
+
+exports.deleteUserValidator = [
+    check('id')
+        .isMongoId()
+        .withMessage('invalide id'),
+    validatorMiddleware
+];
