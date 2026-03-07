@@ -64,3 +64,37 @@ exports.getUserValidator = [
         .withMessage('Invalide id'),
     validatorMiddleware
 ];
+
+exports.updateUserValidator = [
+    check('id')
+        .isMongoId()
+        .withMessage('Invalide id'),
+    check('name')
+        .optional()
+        .custom((name , {req}) => {
+            req.body.slug = slugify(name);
+            return true;
+        }),
+    check('email')
+        .optional()
+        .isEmail()
+        .withMessage('invalde email')
+        .custom(async (email) => {
+            const user = await User.findOne({email : email});
+            if(!user){
+                throw new Error('please enter defirant email')
+            }
+            return true;
+        }),
+    check('phone')
+        .optional()
+        .isMobilePhone(['ar-EG' , 'ar-BH' , 'ar-SA'])
+        .withMessage('Invalide phone number only accepted Egypt , Saadia , Bahren'),
+    check('profileImage')
+        .optional(),
+    check('role')
+        .optional(),
+    check('active')
+        .optional(),
+    validatorMiddleware
+];
