@@ -1,5 +1,6 @@
 const {check} = require('express-validator');
 const slugify = require('slugify');
+const bcrypt = require('bcrypt');
 
 const User = require('../../models/userSchema');
 const validatorMiddleware = require('../../middleware/validatorMiddleware');
@@ -96,5 +97,42 @@ exports.updateUserValidator = [
         .optional(),
     check('active')
         .optional(),
+    validatorMiddleware
+];
+
+exports.chengeUserPasswordValidator = [
+    check('id')
+        .isMongoId()
+        .withMessage('Invalide id'),
+    check('currentPassword')
+        .notEmpty()
+        .withMessage('current password required')
+        .custom(async (value , {req}) => {
+            const user = await User.findById(req.params.id);
+            if(!user){
+                throw new Error('not found user for this id');
+            };
+            const isPasswordCorrect = await bcrypt.compare(
+                req.body.currentPassword ,
+                user.password
+            );
+            if(!isPasswordCorrect){
+                throw new Error('not correct current password');
+            };
+            return true;
+        }),
+    check('newPassword')
+        .notEmpty()
+        .withMessage('new password required')
+        .isLength({min : 6})
+        .withMessage('too short new password'),
+    check('newPasswordConfirm')
+        .notEmpty()
+        .withMessage('new password confirm required')
+        .custom((value , {req}) => {
+            if(value !== req.body.newPasswordConfirm){
+                throw new Error('new password confirm not correct');
+            };
+        }),
     validatorMiddleware
 ];
