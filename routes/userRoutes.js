@@ -9,19 +9,27 @@ const {
     changePassword,
 } = require('../services/userServices');
 
+const {
+    careateUserValidator,
+    getUserValidator,
+    updateUserValidator,
+    deleteUserValidator,
+    chengeUserPasswordValidator,
+} = require('../utils/validatorRoles/userValidator');
+
 const router = express.Router();
 
 // Change user password
 router.route('/changePasswored/:id')
-    .put(changePassword)
+    .put(chengeUserPasswordValidator , changePassword)
 
 router.route('/')
-    .post(createUser)
+    .post(careateUserValidator , createUser)
     .get(getAllUser)
 
 router.route('/:id')
-    .get(getUser)
-    .put(updateUser)
-    .delete(deleteUser)
+    .get(getUserValidator , getUser)
+    .put(updateUserValidator , updateUser)
+    .delete(deleteUserValidator , deleteUser)
 
 module.exports = router;
