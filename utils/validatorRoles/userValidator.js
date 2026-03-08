@@ -113,7 +113,7 @@ exports.chengeUserPasswordValidator = [
                 throw new Error('not found user for this id');
             };
             const isPasswordCorrect = await bcrypt.compare(
-                req.body.currentPassword ,
+                value,
                 user.password
             );
             if(!isPasswordCorrect){
@@ -130,9 +130,10 @@ exports.chengeUserPasswordValidator = [
         .notEmpty()
         .withMessage('new password confirm required')
         .custom((value , {req}) => {
-            if(value !== req.body.newPasswordConfirm){
+            if(value !== req.body.newPassword){
                 throw new Error('new password confirm not correct');
             };
+            return true;
         }),
     validatorMiddleware
 ];
