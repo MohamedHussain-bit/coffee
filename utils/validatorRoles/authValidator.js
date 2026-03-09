@@ -46,3 +46,17 @@ exports.signupValidator = [
         }),
     validatorMiddleware
 ];
+
+exports.loginValidator = [
+    check('email')
+        .notEmpty()
+        .withMessage('email required')
+        .isEmail()
+        .withMessage('invalide email address'),
+    check('password')
+        .notEmpty()
+        .withMessage('password required')
+        .isLength({min : 6})
+        .withMessage('too short password'),
+    validatorMiddleware
+];
