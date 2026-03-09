@@ -4,7 +4,7 @@ const slugify = require('slugify');
 const validatorMiddleware = require('../../middleware/validatorMiddleware');
 const User = require('../../models/userSchema');
 
-exports.signup = [
+exports.signupValidator = [
     check('name')
         .notEmpty()
         .withMessage('user name required')
