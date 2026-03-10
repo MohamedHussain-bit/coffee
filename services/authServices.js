@@ -12,6 +12,7 @@ exports.signup = asyncHandler(async (req , res , next) => {
     // create user
     const user = await User.create({
         name : req.body.name,
+        slug : req.body.slug,
         email : req.body.email,
         password : req.body.password,
     });
@@ -25,7 +26,7 @@ exports.signup = asyncHandler(async (req , res , next) => {
 });
 
 // @desc     Login
-// @route    POST api/v1/auth/signup
+// @route    POST api/v1/auth/login
 // @access   Public
 exports.login = asyncHandler(async (req , res , next) => {
     // check if user exist and check if password correct
