@@ -125,7 +125,13 @@ exports.chengeUserPasswordValidator = [
         .notEmpty()
         .withMessage('new password required')
         .isLength({min : 6})
-        .withMessage('too short new password'),
+        .withMessage('too short new password')
+        .custom((value , {req}) => {
+            if(value === req.body.currentPassword){
+                throw new Error('please enter defrent password');
+            };
+            return true;
+        }),
     check('newPasswordConfirm')
         .notEmpty()
         .withMessage('new password confirm required')
