@@ -42,3 +42,37 @@ exports.login = asyncHandler(async (req , res , next) => {
     );
     return res.status(200).json({data : user , token});
 });
+
+// Check if user exist on system
+exports.protected = asyncHandler(async (req , res , next) => {
+    // check if token exist
+    console.log(req.headers.authorization)
+    let token;
+    if(
+        req.headers.authorization && 
+        req.headers.authorization.startsWith('Bearer')
+    ){
+        token = req.headers.authorization.split(' ')[1];
+    };
+    if(!token){
+        return next(new ApiError(`you are not login, please login to get this route`, 401));
+    };
+    // Verify token (no chenge hapens , expired token)
+    const decoded = jwt.verify(token , process.env.JWT_SECRET_KEY);
+    // check if user exist
+    const currentUser = await User.findById(decoded.userId);
+    if(!currentUser){
+        return next(new ApiError('the user that belong to this token dose no longer exist'));
+    };
+    // check if user change password after created
+    if(currentUser.passwordChangedAt){
+        const passwordChangedTimeStamb = parseInt(
+            currentUser.passwordChangedAt.getTime() / 1000 , 10
+        );
+        if(passwordChangedTimeStamb > decoded.iat){
+            return next(new ApiError('user recently changed his password. please login agin' , 401));
+        };
+    };
+    req.user = currentUser;
+    next();
+});

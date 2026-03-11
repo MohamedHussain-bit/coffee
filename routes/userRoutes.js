@@ -17,6 +17,10 @@ const {
     chengeUserPasswordValidator,
 } = require('../utils/validatorRoles/userValidator');
 
+const {
+    protected
+} = require('../services/authServices');
+
 const router = express.Router();
 
 // Change user password
@@ -25,7 +29,7 @@ router.route('/changePasswored/:id')
 
 router.route('/')
     .post(careateUserValidator , createUser)
-    .get(getAllUser)
+    .get(protected , getAllUser)
 
 router.route('/:id')
     .get(getUserValidator , getUser)

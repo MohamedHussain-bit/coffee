@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema({
         required : [true , 'user password required'],
         minLength : [6 , 'too short user passeord'],
     },
+    passwordChangedAt : Date,
     phone : String,
     profileImage : String,
     role : {
