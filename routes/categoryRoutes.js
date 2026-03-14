@@ -15,6 +15,11 @@ const {
     deleteCategoryValidator,
 } = require('../utils/validatorRoles/categoryValidator');
 
+const {
+    protected,
+    allowedTo,
+} = require('../services/authServices');
+
 const productRoutes = require('./productRoutes');
 
 const router = express.Router();
@@ -23,12 +28,27 @@ const router = express.Router();
 router.use('/:categoryId/products' , productRoutes);
 
 router.route('/')
-    .post(createCategoryValidator ,createCategory)
+    .post(
+        protected, 
+        allowedTo('admin'), 
+        createCategoryValidator,
+        createCategory
+    )
     .get(getAllCategories)
 
 router.route('/:id')
     .get(getSpecificCategoryValidator , getSpecificCategory)
-    .put(updateCategoryValidator , updateCategory)
-    .delete(deleteCategoryValidator , deleteCategory)
+    .put(
+        protected, 
+        allowedTo('admin'),
+        updateCategoryValidator,
+        updateCategory
+    )
+    .delete(
+        protected, 
+        allowedTo('admin'),
+        deleteCategoryValidator,
+        deleteCategory
+    )
 
 module.exports = router;
