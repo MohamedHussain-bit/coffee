@@ -76,3 +76,13 @@ exports.protected = asyncHandler(async (req , res , next) => {
     req.user = currentUser;
     next();
 });
+
+// User permission
+exports.allowedTo = (...roles) => {
+    return asyncHandler(async (req , res , next) => {
+        if(!roles.includes(req.user.role)){
+            return next(new ApiError(`you are not allwoed to access this route` , 403));
+        };
+        next();
+    });
+};
