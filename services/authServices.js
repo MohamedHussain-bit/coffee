@@ -46,7 +46,6 @@ exports.login = asyncHandler(async (req , res , next) => {
 // Check if user exist on system
 exports.protected = asyncHandler(async (req , res , next) => {
     // check if token exist
-    console.log(req.headers.authorization)
     let token;
     if(
         req.headers.authorization && 
