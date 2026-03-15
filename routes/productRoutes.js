@@ -19,15 +19,40 @@ const {
     deleteProductValidator,
 } = require('../utils/validatorRoles/productValidator');
 
+const {
+    protected,
+    allowedTo,
+} = require('../services/authServices');
+
 const router = express.Router({mergeParams : true});
 
 router.route('/')
-    .post(uploadProductImage , resizeImage ,  setCategoryIdToBody , createProductValidator , createProduct)
+    .post(
+        protected, 
+        allowedTo('admin'),
+        uploadProductImage, 
+        resizeImage,  
+        setCategoryIdToBody, 
+        createProductValidator, 
+        createProduct
+    )
     .get(createFilterObject , getAllProducts)
 
 router.route('/:id')
     .get(getSpecificProductValidator , getSpecificProduct)
-    .put(uploadProductImage , resizeImage , updateProductValidator , updateProduct)
-    .delete(deleteProductValidator , deleteProduct)
+    .put(
+        protected, 
+        allowedTo('admin'),
+        uploadProductImage, 
+        resizeImage, 
+        updateProductValidator, 
+        updateProduct
+    )
+    .delete(
+        protected, 
+        allowedTo('admin'),
+        deleteProductValidator, 
+        deleteProduct
+    )
 
 module.exports = router;
