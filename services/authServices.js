@@ -40,6 +40,13 @@ exports.login = asyncHandler(async (req , res , next) => {
         process.env.JWT_SECRET_KEY,
         {expiresIn : process.env.JWT_SECRET_TIME}
     );
+    // Set token in cookies
+    res.cookie("token" , token , {
+        httpOnly : true,
+        secure : true,
+        sameSite : "strict",
+        maxAge : 1000 * 60 * 60 * 24 * 90
+    });
     return res.status(200).json({data : user , token});
 });
 
