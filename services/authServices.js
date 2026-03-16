@@ -50,6 +50,20 @@ exports.login = asyncHandler(async (req , res , next) => {
     return res.status(200).json({data : user , token});
 });
 
+// @desc     logout
+// @route    POST api/v1/auth/logout
+// @access   Public
+exports.logout = asyncHandler(async (req , res , next) => {
+    // Delete cookie
+    res.cookie("token" , "" , {
+        httpOnly : true,
+        secure : true,
+        sameSite : "lax",
+        expires : new Date(0),
+    });
+    res.status(200).json({message : 'logged out successfully'});
+});
+
 // Check if user exist on system
 exports.protected = asyncHandler(async (req , res , next) => {
     // check if token exist
