@@ -3,6 +3,7 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
 const connectDB = require('./config/connectDB');
@@ -19,6 +20,9 @@ connectDB();
 const app = express();
 
 app.use(express.json());
+
+// Allowed to read cookie from request
+app.use(cookieParser());
 
 // serve static file into uploads folder
 app.use(express.static(path.join(__dirname , 'uploads')));
