@@ -1,9 +1,9 @@
 const asyncHandler = require('express-async-handler');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt')
 
 const ApiError = require('../utils/apiError');
 const User = require('../models/userSchema');
+const createToken = require('../utils/createToken');
 
 // @desc     Signup
 // @route    POST api/v1/auth/signup
@@ -17,11 +17,7 @@ exports.signup = asyncHandler(async (req , res , next) => {
         password : req.body.password,
     });
     // Generate token
-    const token = jwt.sign(
-        {userId : user._id},
-        process.env.JWT_SECRET_KEY,
-        {expiresIn : process.env.JWT_SECRET_TIME}
-    );
+    const token = createToken(user._id);
     return res.status(201).json({data : user , token});
 });
 
@@ -35,11 +31,7 @@ exports.login = asyncHandler(async (req , res , next) => {
         return next(new ApiError('Incorect email or password' , 401));
     };
     // Generate token
-    const token = jwt.sign(
-        {userId : user._id},
-        process.env.JWT_SECRET_KEY,
-        {expiresIn : process.env.JWT_SECRET_TIME}
-    );
+    const token = createToken(user._id);
     // Set token in cookies
     res.cookie("token" , token , {
         httpOnly : true,
