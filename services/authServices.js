@@ -98,3 +98,20 @@ exports.allowedTo = (...roles) => {
         next();
     });
 };
+
+// @desc     Forget password
+// @route    POST api/v1/auth/forgetPassword
+// @access   Public
+exports.forgetPassword = asyncHandler(async (req , res , next) => {
+    // Get user by email
+    const user = await User.findOne({email : req.body.email});
+    if(!user){
+        return next(new ApiError('not found user for this email' , 404));
+    };
+    // Generate reset random 6 digit and save it in db
+    const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+})
+
+
+
+console.log(Math.floor(100000 + Math.random() * 900000));
