@@ -27,7 +27,7 @@ exports.signup = asyncHandler(async (req , res , next) => {
 exports.login = asyncHandler(async (req , res , next) => {
     // check if user exist and check if password correct
     const user = await User.findOne({email : req.body.email});
-    if(!user || !bcrypt.compare(req.body.password , user.password)){
+    if(!user || ! await bcrypt.compare(req.body.password , user.password)){
         return next(new ApiError('Incorect email or password' , 401));
     };
     // Generate token
@@ -109,9 +109,6 @@ exports.forgetPassword = asyncHandler(async (req , res , next) => {
         return next(new ApiError('not found user for this email' , 404));
     };
     // Generate reset random 6 digit and save it in db
-    const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
-})
-
-
-
-console.log(Math.floor(100000 + Math.random() * 900000));
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const hashedOtp = await bcrypt.hash(otp , 10);
+});
