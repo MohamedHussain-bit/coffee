@@ -23,6 +23,9 @@ const userSchema = new mongoose.Schema({
         minLength : [6 , 'too short user passeord'],
     },
     passwordChangedAt : Date,
+    passwordResetOtp : String,
+    resetOtpExpires : Date,
+    passwordResetOtpVerified : Boolean,
     phone : String,
     profileImage : String,
     role : {

@@ -111,4 +111,10 @@ exports.forgetPassword = asyncHandler(async (req , res , next) => {
     // Generate reset random 6 digit and save it in db
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const hashedOtp = await bcrypt.hash(otp , 10);
+    // Save hashed otp on db
+    user.passwordResetOtp = hashedOtp;
+    // add expires time for password reset otp
+    user.resetOtpExpires = Date.now() + 1000 * 60 * 10;
+    user.passwordResetOtpVerified = false;
+    await user.save();
 });
