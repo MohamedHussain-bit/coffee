@@ -7,6 +7,10 @@ const {
     updateUser,
     deleteUser,
     changePassword,
+    getLoggedUserData,
+    updateLoggedUserPassword,
+    updateLoggeUserData,
+    deleteLoggedUserData,
 } = require('../services/userServices');
 
 const {
@@ -57,6 +61,35 @@ router.route('/:id')
         allowedTo('admin'),
         deleteUserValidator, 
         deleteUser
+    )
+
+router.route('/getMe')
+    .get(
+        protected,
+        allowedTo('user'),
+        getLoggedUserData,
+        getUser
+    )
+
+router.route('/changeMyPassword')
+    .put(
+        protected,
+        allowedTo('user'),
+        updateLoggedUserPassword
+    )
+
+router.route('/updateMe')
+    .put(
+        protected,
+        allowedTo('user'),
+        updateLoggeUserData
+    )
+
+router.route('/deleteMe')
+    .delete(
+        protected,
+        allowedTo('user'),
+        deleteLoggedUserData
     )
 
 module.exports = router;

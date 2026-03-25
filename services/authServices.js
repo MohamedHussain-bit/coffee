@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt')
 const ApiError = require('../utils/apiError');
 const User = require('../models/userSchema');
 const createToken = require('../utils/createToken');
+const sendEmail = require('../utils/sendEmail');
 
 // @desc     Signup
 // @route    POST api/v1/auth/signup
@@ -117,4 +118,13 @@ exports.forgetPassword = asyncHandler(async (req , res , next) => {
     user.resetOtpExpires = Date.now() + 1000 * 60 * 10;
     user.passwordResetOtpVerified = false;
     await user.save();
+    // Careate message
+    const message = `Dear ${user.name},\nYour code is: ${otp}. Use to access your account.\nIf you did not request this, simply ignore this message\nYours,\nThe coffee-App Team`;
+    // Send the email
+    await sendEmail({
+        email : user.email,
+        subject : 'your password reset code (valide for 10 min)',
+        message
+    });
+    res.status(200).json({status : 'Success' , message : 'code sent to email'});
 });

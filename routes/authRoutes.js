@@ -4,6 +4,7 @@ const {
     signup,
     login,
     logout,
+    forgetPassword,
 } = require('../services/authServices');
 
 const {
@@ -21,5 +22,8 @@ router.route('/login')
 
 router.route('/logout')
     .post(logout)
+
+router.route('/forgotPassword')
+    .post(forgetPassword)
 
 module.exports = router;
