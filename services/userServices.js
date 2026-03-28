@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler');
 const {v4 : uuid} = require('uuid');
 const sharp = require('sharp');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const ApiError = require('../utils/apiError');
 const User = require('../models/userSchema');
