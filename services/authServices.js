@@ -155,3 +155,23 @@ exports.verifyResetPasswordOtp = asyncHandler(async (req , res , next) => {
     await user.save();
     res.status(200).json({status : 'Success' , message : 'otp verified successfully'});
 });
+
+// @desc     Reset password
+// @route    POST api/v1/auth/resetPassword
+// @access   Public
+exports.resetPassword = asyncHandler(async (req , res , next) => {
+    // Get user based on email
+    const user = await User.findOne({email : req.body.email});
+    if(!user){
+        return next(new ApiError('not found user for this email' , 404));
+    }
+    if(!user.passwordResetOtpVerified){
+        return next(new ApiError('you are not allowed to reset password for this user' , 403));
+    }
+    user.password = req.body.newPassword;
+    user.passwordResetOtp = undefined;
+    user.resetOtpExpires = undefined;
+    user.passwordResetOtpVerified = undefined;
+    await user.save();
+    res.status(200).json({status : 'Success' , message : 'password reset successfully'});
+});
