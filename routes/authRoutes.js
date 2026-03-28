@@ -5,6 +5,8 @@ const {
     login,
     logout,
     forgetPassword,
+    verifyResetPasswordOtp,
+    resetPassword
 } = require('../services/authServices');
 
 const {
@@ -25,5 +27,11 @@ router.route('/logout')
 
 router.route('/forgotPassword')
     .post(forgetPassword)
+
+router.route('/verifyResetPasswordOtp')
+    .post(verifyResetPasswordOtp)
+
+router.route('/resetPassword')
+    .post(resetPassword)
 
 module.exports = router;
