@@ -121,10 +121,37 @@ exports.forgetPassword = asyncHandler(async (req , res , next) => {
     // Careate message
     const message = `Dear ${user.name},\nYour code is: ${otp}. Use to access your account.\nIf you did not request this, simply ignore this message\nYours,\nThe coffee-App Team`;
     // Send the email
+    try{
     await sendEmail({
         email : user.email,
         subject : 'your password reset code (valide for 10 min)',
         message
     });
+    }catch(err){
+        user.passwordResetOtp = undefined;
+        user.resetOtpExpires = undefined;
+        await user.save();
+        return next(new ApiError('failed to send email' , 500));
+    }
+
     res.status(200).json({status : 'Success' , message : 'code sent to email'});
+});
+
+// @desc     Verify reset password otp
+// @route    POST api/v1/auth/verifyResetPasswordOtp
+// @access   Public
+exports.verifyResetPasswordOtp = asyncHandler(async (req , res , next) => {
+    const hashedOtp = await bcrypt.hash(req.body.otp , 10);
+    // Get user based on reset password otp
+    const user = await User.findOne({
+        passwordResetOtp : hashedOtp,
+        resetOtpExpires : {$gt : Date.now()},
+    });
+    if(!user){
+        return next(new ApiError('invalid or expired otp' , 400));
+    }
+    user.passwordResetOtpVerified = true;
+    user.passwordResetOtp = undefined;
+    await user.save();
+    res.status(200).json({status : 'Success' , message : 'otp verified successfully'});
 });
