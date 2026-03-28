@@ -32,6 +32,6 @@ router.route('/verifyResetPasswordOtp')
     .post(verifyResetPasswordOtp)
 
 router.route('/resetPassword')
-    .post(resetPassword)
+    .put(resetPassword)
 
 module.exports = router;
