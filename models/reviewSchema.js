@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
-    review: {
+    title: {
         type: String,
+        trim: true,
+        maxlength: [100, 'Title cannot be more than 100 characters'],
     },
     rating: {
         type: Number,
