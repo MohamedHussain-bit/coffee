@@ -70,9 +70,9 @@ const setImageURL = (document) => {
     };
     if(document.images){
         const imagesList = [];
-        document.images.array.forEach((image)=> {
+        document.images.forEach((image)=> {
             const imageUrl = `${process.env.BASE_URL}/products/${image}`;
-            images.push(imageUrl);
+            imagesList.push(imageUrl);
         });
         document.images = imagesList;
     };
