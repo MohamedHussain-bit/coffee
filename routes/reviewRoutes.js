@@ -11,19 +11,51 @@ const {
 } = require('../services/reviewServices');
 
 const {
+  createReviewValidator,
+  getReviewValidator,
+  deleteReviewValidator,
+  updateReviewValidator,
+} = require('../utils/validatorRoles/reviewValidator');
+
+const {
     protected ,
-    allowedTo
+    allowedTo,
 } = require('../services/authServices');
+
+router.use(
+  protected, 
+  allowedTo('user')
+);
 
 router
   .route('/')
-  .post(protected, allowedTo('user'), createReview)
+  .post(
+    protected, 
+    allowedTo('user'), 
+    createReviewValidator,  
+    createReview
+  )
 
 
 router
   .route('/:id')
-  .get(getReview)
-  .delete(protected, allowedTo('user' , 'admin'), deleteReview)
-  .put(protected, allowedTo('user'), updateReview);
+  .get(
+    protected , 
+    allowedTo('user') , 
+    getReviewValidator,
+    getReview
+  )
+  .delete(
+    protected, 
+    allowedTo('user' , 'admin'), 
+    deleteReviewValidator, 
+    deleteReview
+  )
+  .put(
+    protected,
+    allowedTo('user'), 
+    updateReviewValidator, 
+    updateReview
+  );
 
 module.exports = router;

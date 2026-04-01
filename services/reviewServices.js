@@ -9,7 +9,7 @@ exports.createReview = handlerFactory.createOne(Review);
 // @desc     Get all reviews
 // @route    GET /api/v1/reviews
 // @access   Private
-//exports.getAllReviews = handlerFactory.getAll(Review);
+exports.getAllReviews = handlerFactory.getList(Review);
 
 // @desc     Get specific review
 // @route    GET /api/v1/reviews/:id

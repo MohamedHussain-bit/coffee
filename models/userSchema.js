@@ -37,6 +37,21 @@ const userSchema = new mongoose.Schema({
         type : Boolean,
         default : true,
     },
+
+    // Chaled referance
+    wishList : [{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Product'
+    }],
+
+    // Empeddied document
+    addresses : [{
+        id : { types : mongoose.Schema.Types.ObjectId},
+        alias : String,
+        phone : String,
+        postalCode : String,
+        city : String
+    }]
 });
 
 userSchema.pre('save' , async function(){
